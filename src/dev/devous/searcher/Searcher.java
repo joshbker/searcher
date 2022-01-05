@@ -24,7 +24,6 @@ public final class Searcher {
         double similarity = Double.MIN_VALUE;
         for (String entry : in) {
             double score = strategy.score(term, entry);
-            System.out.println(entry + ": " + score);
             if (score >= similarity) {
                 result = entry;
                 similarity = score;
