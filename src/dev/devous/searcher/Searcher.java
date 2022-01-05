@@ -1,23 +1,26 @@
 package dev.devous.searcher;
 
-public final class Searcher {
-    private static Searcher INSTANCE;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-    public static Searcher instance() {
+public final class Searcher {
+    private static @Nullable Searcher INSTANCE;
+
+    public static @NotNull Searcher instance() {
         return INSTANCE == null ? new Searcher() : INSTANCE;
     }
 
-    private final SearcherStrategy strategy;
+    private final @NotNull SearcherStrategy strategy;
 
     private Searcher() {
         strategy = new SearcherStrategy();
     }
 
-    public SearcherStrategy strategy() {
+    public @NotNull SearcherStrategy strategy() {
         return strategy;
     }
 
-    public SearchResult searchFor(final String term, final String[] in) {
+    public @NotNull SearchResult searchFor(final @NotNull String term, final @NotNull String[] in) {
         String result = "None";
         double similarity = Double.MIN_VALUE;
         for (String entry : in) {

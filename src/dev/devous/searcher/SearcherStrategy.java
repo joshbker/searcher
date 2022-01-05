@@ -1,13 +1,20 @@
 package dev.devous.searcher;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class SearcherStrategy {
-    private final double SCALING_FACTOR = 0.1D;
-    private final int MAX_PREFIX_LENGTH = 4;
+    private final double SCALING_FACTOR;
+    private final int MAX_PREFIX_LENGTH;
+
+    {
+        SCALING_FACTOR = 0.1D;
+        MAX_PREFIX_LENGTH = 4;
+    }
 
     SearcherStrategy() {
     }
 
-    public double score(final String a, final String b) {
+    public double score(final @NotNull String a, final @NotNull String b) {
         /* Assign the shorter & longer strings. */
         boolean aShortest = a.length() < b.length();
         String shorter = aShortest ? a : b;
@@ -37,7 +44,7 @@ public final class SearcherStrategy {
         return distance + (SCALING_FACTOR * prefixScore(a, b) * (1.0 - distance));
     }
 
-    private String getMatching(final String a, final String b, final int limit) {
+    private @NotNull String getMatching(final @NotNull String a, final @NotNull String b, final int limit) {
         StringBuilder common = new StringBuilder();
         StringBuilder copy = new StringBuilder(b);
         for (int i = 0; i < a.length(); i++) {
@@ -54,7 +61,7 @@ public final class SearcherStrategy {
         return common.toString();
     }
 
-    private int transpositions(final String a, final String b) {
+    private int transpositions(final @NotNull String a, final @NotNull String b) {
         int transpositions = 0;
         for (int i = 0; i < a.length(); i++) {
             if (a.charAt(i) != b.charAt(i)) {
@@ -64,7 +71,7 @@ public final class SearcherStrategy {
         return transpositions / 2;
     }
 
-    private int prefixScore(final String a, final String b) {
+    private int prefixScore(final @NotNull String a, final @NotNull String b) {
         /* Assign the shorter & longer strings. */
         boolean aShortest = a.length() < b.length();
         String shorter = aShortest ? a : b;
