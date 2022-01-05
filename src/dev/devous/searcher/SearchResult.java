@@ -1,24 +1,22 @@
 package dev.devous.searcher;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 
 public final class SearchResult {
-    private final @NotNull String result;
+    private final String result;
     private final double similarity;
-    private final @NotNull String term;
-    private final @NotNull String[] in;
+    private final String term;
+    private final String[] in;
 
-    SearchResult(final @NotNull String result, final double similarity,
-            final @NotNull String term, final @NotNull String[] in) {
+    SearchResult(final String result, final double similarity,
+            final String term, final String[] in) {
         this.result = result;
         this.similarity = similarity;
         this.term = term;
         this.in = in;
     }
 
-    public @NotNull String result() {
+    public String result() {
         return result;
     }
 
@@ -26,16 +24,16 @@ public final class SearchResult {
         return similarity;
     }
 
-    public @NotNull String term() {
+    public String term() {
         return term;
     }
 
-    public @NotNull String[] in() {
+    public String[] in() {
         return in;
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "SearchResult{" +
                 "result='" + result + '\'' +
                 ", similarity=" + similarity +
