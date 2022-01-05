@@ -8,17 +8,10 @@ public final class SearcherStrategy {
     }
 
     public double score(final String a, final String b) {
-        String shorter;
-        String longer;
-
         /* Assign the shorter & longer strings. */
-        if (a.length() > b.length()) {
-            shorter = b.toLowerCase();
-            longer = a.toLowerCase();
-        } else {
-            shorter = a.toLowerCase();
-            longer = b.toLowerCase();
-        }
+        boolean aShortest = a.length() < b.length();
+        String shorter = aShortest ? a : b;
+        String longer = aShortest ? b : a;
 
         /* Calculate half of the length of the shorter string. */
         int halfLength = (shorter.length() / 2) + 1;
@@ -68,21 +61,14 @@ public final class SearcherStrategy {
                 transpositions++;
             }
         }
-        return transpositions /= 2;
+        return transpositions / 2;
     }
 
     private int prefixScore(final String a, final String b) {
-        String shorter;
-        String longer;
-
         /* Assign the shorter & longer strings. */
-        if (a.length() > b.length()) {
-            shorter = b.toLowerCase();
-            longer = a.toLowerCase();
-        } else {
-            shorter = a.toLowerCase();
-            longer = b.toLowerCase();
-        }
+        boolean aShortest = a.length() < b.length();
+        String shorter = aShortest ? a : b;
+        String longer = aShortest ? b : a;
 
         int result = 0;
         for (int i = 0; i < shorter.length(); i++) {
