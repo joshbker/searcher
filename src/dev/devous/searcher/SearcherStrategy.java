@@ -27,8 +27,8 @@ public final class SearcherStrategy {
         String matchA = getMatching(a, b, halfLength);
         String matchB = getMatching(b, a, halfLength);
 
-        /* If at least one of the sets of common characters is empty, there is no similarity between the two strings. */
-        if (matchA.length() == 0 || matchB.length() == 0) {
+        /* If at least one of the sets of common characters is empty, or not the same size, there is no similarity between the two strings. */
+        if (matchA.length() == 0 || matchB.length() == 0 || matchA.length() != matchB.length()) {
             return 0.0D;
         }
 
