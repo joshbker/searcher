@@ -3,6 +3,8 @@ package dev.devous.searcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public final class Searcher {
     private static @Nullable Searcher INSTANCE;
 
@@ -20,12 +22,12 @@ public final class Searcher {
         return strategy;
     }
 
-    public @NotNull SearchResult searchFor(final @NotNull String term, final @NotNull String[] in) {
+    public @NotNull SearchResult searchFor(final @NotNull String term, final @NotNull List<String> in) {
         String result = "None";
         double similarity = Double.MIN_VALUE;
         for (String entry : in) {
             double score = strategy.score(term, entry);
-            if (score >= similarity) {
+            if (score > similarity) {
                 result = entry;
                 similarity = score;
             }

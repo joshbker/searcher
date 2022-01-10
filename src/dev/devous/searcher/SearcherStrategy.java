@@ -4,11 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 public final class SearcherStrategy {
     private final double SCALING_FACTOR;
-    private final int MAX_PREFIX_LENGTH;
+    private final int BIAS_PREFIX_LENGTH;
 
     {
         SCALING_FACTOR = 0.1D;
-        MAX_PREFIX_LENGTH = 4;
+        BIAS_PREFIX_LENGTH = 4;
     }
 
     SearcherStrategy() {
@@ -27,8 +27,8 @@ public final class SearcherStrategy {
         String matchA = getMatching(a, b, halfLength);
         String matchB = getMatching(b, a, halfLength);
 
-        /* If at least one of the sets of common characters is empty, or not the same size, there is no similarity between the two strings. */
-        if (matchA.length() == 0 || matchB.length() == 0 || matchA.length() != matchB.length()) {
+        /* If at least one of the sets of common characters is empty, there is no similarity between the two strings. */
+        if (matchA.length() == 0 || matchB.length() == 0) {
             return 0.0D;
         }
 
@@ -41,7 +41,7 @@ public final class SearcherStrategy {
                 (matchA.length() - transpositions) / ((double) matchA.length())) / 3.0;
 
         /* Use prefix scale to give more favourable ratings to strings that match at the beginning up to MAX_PREFIX_LENGTH. */
-        return distance + (SCALING_FACTOR * prefixScore(a, b) * (1.0 - distance));
+        return distance + (SCALING_FACTOR * bias(a, b) * (1.0 - distance));
     }
 
     private @NotNull String getMatching(final @NotNull String a, final @NotNull String b, final int limit) {
@@ -71,21 +71,25 @@ public final class SearcherStrategy {
         return transpositions / 2;
     }
 
-    private int prefixScore(final @NotNull String a, final @NotNull String b) {
-        /* Assign the shorter & longer strings. */
-        boolean aShortest = a.length() < b.length();
-        String shorter = aShortest ? a : b;
-        String longer = aShortest ? b : a;
-
+    private int bias(final @NotNull String a, final @NotNull String b) {
         int result = 0;
-        for (int i = 0; i < shorter.length(); i++) {
-            if (shorter.charAt(i) != longer.charAt(i)) {
-                break;
-            }
-            result++;
-        }
 
-        /* Limit result to MAX_PREFIX_LENGTH. */
-        return Math.min(MAX_PREFIX_LENGTH, result);
+        String[] a2 = a.toLowerCase().replaceAll("[^\\w ]", "")
+                .replaceAll("[\\s]{2,}", " ").split("[\\s]");
+        String[] b2 = b.toLowerCase().replaceAll("[^\\w ]", "")
+                .replaceAll("[\\s]{2,}", " ").split("[\\s]");
+
+        for (String a3 : a2) {
+            for (String b3 : b2) {
+                int len = a3.length() < BIAS_PREFIX_LENGTH || b3.length() < BIAS_PREFIX_LENGTH ?
+                        Math.min(a3.length(), b3.length()) : BIAS_PREFIX_LENGTH;
+                for (int i = 0; i < len; i++) {
+                    if (a3.charAt(i) == b3.charAt(i)) {
+                        result++;
+                    }
+                }
+            }
+        }
+        return result;
     }
 }
