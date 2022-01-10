@@ -1,5 +1,5 @@
 # `searcher`
-Uses Jaro-Wrinkler distance to find closest result to search term.
+Uses modified Jaro distance to find closest result to search term.
 
 Example usage:
 ```java
