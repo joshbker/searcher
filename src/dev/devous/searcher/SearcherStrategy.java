@@ -3,11 +3,13 @@ package dev.devous.searcher;
 import org.jetbrains.annotations.NotNull;
 
 public final class SearcherStrategy {
-    private final double SCALING_FACTOR;
+    private final double PREFIX_SCALING_FACTOR;
+    private final double WORD_SCALING_FACTOR;
     private final int BIAS_PREFIX_LENGTH;
 
     {
-        SCALING_FACTOR = 0.1D;
+        PREFIX_SCALING_FACTOR = 0.3D;
+        WORD_SCALING_FACTOR = 0.5D;
         BIAS_PREFIX_LENGTH = 4;
     }
 
@@ -41,7 +43,8 @@ public final class SearcherStrategy {
                 (matchA.length() - transpositions) / ((double) matchA.length())) / 3.0;
 
         /* Use prefix scale to give more favourable ratings to strings that match at the beginning up to MAX_PREFIX_LENGTH. */
-        return distance + (SCALING_FACTOR * bias(a, b) * (1.0 - distance));
+        return distance + ((PREFIX_SCALING_FACTOR * prefixBias(a, b)) * (WORD_SCALING_FACTOR * wordBias(a, b)) * (1.0 - distance));
+        /*return distance + (PREFIX_SCALING_FACTOR * prefixBias(a, b) * (1.0 - distance));*/
     }
 
     private @NotNull String getMatching(final @NotNull String a, final @NotNull String b, final int limit) {
@@ -71,7 +74,7 @@ public final class SearcherStrategy {
         return transpositions / 2;
     }
 
-    private int bias(final @NotNull String a, final @NotNull String b) {
+    private int prefixBias(final @NotNull String a, final @NotNull String b) {
         int result = 0;
 
         String[] a2 = a.toLowerCase().replaceAll("[^\\w ]", "")
@@ -90,6 +93,19 @@ public final class SearcherStrategy {
                 }
             }
         }
+
+        System.out.println(a + " " + b + " - prefixBias: " + result);
+        return result;
+    }
+
+    private int wordBias(final @NotNull String a, final @NotNull String b) {
+        int result = 0;
+        for (String a2 : a.split(" ")) {
+            if (b.toLowerCase().contains(a2.toLowerCase())) {
+                result++;
+            }
+        }
+        System.out.println(a + " " + b + " - wordBias: " + result);
         return result;
     }
 }
